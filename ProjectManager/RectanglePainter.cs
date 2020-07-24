@@ -15,8 +15,6 @@ namespace ProjectManager
 
         public IList<Rectangle> Rectangles { get; private set; }
 
-        private readonly IList<Rectangle> NativeRectangles;
-
         private Point StartPosition;
         private Point CurrentPosition;
 
@@ -25,7 +23,6 @@ namespace ProjectManager
 
         public RectanglePainter()
         {
-            this.NativeRectangles = new List<Rectangle>();
             this.Rectangles = new List<Rectangle>();
 
             this.Brush = new SolidBrush(FillColor);
@@ -52,10 +49,8 @@ namespace ProjectManager
                 var rectangle = CreateNativeRectangle(zoomFactor);
                 if (rectangle.Width > 0 && rectangle.Height > 0)
                 {
-                    NativeRectangles.Add(rectangle);
+                    return rectangle;
                 }
-                ResizeRectangles(zoomFactor);
-                return rectangle;
             }
             return default;
         }
@@ -75,10 +70,10 @@ namespace ProjectManager
             }
         }
 
-        public void ResizeRectangles(float zoomFactor)
+        public void ResizeRectangles(IEnumerable<Rectangle> nativeRectangles, float zoomFactor)
         {
             Rectangles.Clear();
-            foreach (var rectangle in NativeRectangles)
+            foreach (var rectangle in nativeRectangles)
             {
                 var x = (int)(rectangle.X * zoomFactor);
                 var y = (int)(rectangle.Y * zoomFactor);

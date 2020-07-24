@@ -1,4 +1,5 @@
 ﻿using ProjectManager.Properties;
+using ProjectManager.Zone;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +19,8 @@ namespace ProjectManager
         private static readonly float MaxZoom = 3f;
 
         private readonly RectanglePainter Painter;
+        private readonly ZoneContainer ZoneContainer;
+
         private readonly Image OriginalImage;
         private float ZoomFactor;
 
@@ -29,6 +32,7 @@ namespace ProjectManager
 
             ZoomFactor = 1;
             Painter = new RectanglePainter();
+            ZoneContainer = new ZoneContainer();
 
             var floorplan = image;
             OriginalImage = image;
@@ -68,7 +72,8 @@ namespace ProjectManager
             var newRectangle = Painter.AssignNewNativeRectangle(ZoomFactor);
             if (newRectangle != default)
             {
-
+                ZoneContainer.CreateDesk(newRectangle);
+                ResizeRectangles();
                 Repaint();
             }
         }
@@ -114,11 +119,10 @@ namespace ProjectManager
             }
 
             ZoomFactor = ZoomFactor.Clamp(MinZoom, MaxZoom);
-            Console.WriteLine(ZoomFactor);
+
+            ResizeRectangles();
 
             Size newSize = new Size((int)(OriginalImage.Width * ZoomFactor), (int)(OriginalImage.Height * ZoomFactor));
-
-            Painter.ResizeRectangles(ZoomFactor);
 
             Image originalBitmap = FloorplanCanvas.Image;
             Bitmap bmp = new Bitmap(OriginalImage, newSize);
@@ -141,6 +145,12 @@ namespace ProjectManager
         private bool IsMouseOverRectangle(Point mouseLocation)
         {
             return GetRectangleUnderMouse(mouseLocation) != default;
+        }
+
+        private void ResizeRectangles()
+        {
+            var rectangles = ZoneContainer.Zones.Select(zone => zone.Rectangle);
+            Painter.ResizeRectangles(rectangles, ZoomFactor);
         }
 
         private void Repaint()
