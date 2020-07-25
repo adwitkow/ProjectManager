@@ -113,12 +113,12 @@ namespace ProjectManager
                 ZoomFactor *= 0.8f;
             }
 
+            ZoomFactor = ZoomFactor.Clamp(MinZoom, MaxZoom);
+
             if (ZoomFactor == MinZoom || ZoomFactor == MaxZoom)
             {
                 return;
             }
-
-            ZoomFactor = ZoomFactor.Clamp(MinZoom, MaxZoom);
 
             ResizeRectangles();
 
