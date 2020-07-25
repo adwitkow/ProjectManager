@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectManager.Zone.Implementation;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -19,6 +20,11 @@ namespace ProjectManager.Zone
         public void CreateDesk(Rectangle rectangle)
         {
             Zones.Add(new DeskZone(rectangle));
+        }
+
+        public void CreateTeam(string name, Rectangle rectangle)
+        {
+            Zones.Add(new TeamZone(name, rectangle));
         }
     }
 }
