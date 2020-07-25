@@ -36,11 +36,14 @@ namespace ProjectManager
 
             var floorplan = image;
             OriginalImage = image;
+            FloorplanCanvas.Location = FloorplanCanvasPanel.Location;
             FloorplanCanvas.Size = floorplan.Size;
             FloorplanCanvas.Image = floorplan;
 
             this.MouseWheel += this.FloorplanCanvas_MouseWheel;
             FloorplanCanvas.MouseWheel += this.FloorplanCanvas_MouseWheel;
+
+            ZoneTypeComboBox.SelectedIndex = 0;
         }
 
         private void FloorplanCanvas_MouseWheel(object sender, MouseEventArgs e)
