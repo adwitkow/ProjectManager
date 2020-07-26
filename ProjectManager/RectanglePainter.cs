@@ -13,8 +13,6 @@ namespace ProjectManager
 
         public bool IsDrawing { get; private set; }
 
-        public IList<Rectangle> Rectangles { get; private set; }
-
         private Point StartPosition;
         private Point CurrentPosition;
 
@@ -23,8 +21,6 @@ namespace ProjectManager
 
         public RectanglePainter()
         {
-            this.Rectangles = new List<Rectangle>();
-
             this.Brush = new SolidBrush(FillColor);
             this.Pen = new Pen(BorderColor) { DashStyle = DashStyle.Dash };
         }
@@ -41,7 +37,7 @@ namespace ProjectManager
             CurrentPosition = position;
         }
 
-        public Rectangle AssignNewNativeRectangle(float zoomFactor)
+        public Rectangle GetCurrentNativeRectangle(float zoomFactor)
         {
             if (IsDrawing)
             {
@@ -55,31 +51,17 @@ namespace ProjectManager
             return default;
         }
 
-        public void PaintRectangles(Graphics graphics)
+        public void PaintRectangles(Graphics graphics, Rectangle[] rectangles)
         {
-            if (Rectangles.Count > 0)
+            if (rectangles.Length > 0)
             {
-                var rectanglesArray = Rectangles.ToArray();
-                graphics.FillRectangles(Brush, rectanglesArray);
-                graphics.DrawRectangles(Pen, rectanglesArray);
+                graphics.FillRectangles(Brush, rectangles);
+                graphics.DrawRectangles(Pen, rectangles);
             }
 
             if (IsDrawing)
             {
                 graphics.DrawRectangle(Pens.Red, CreateNativeRectangle(1));
-            }
-        }
-
-        public void ResizeRectangles(IEnumerable<Rectangle> nativeRectangles, float zoomFactor)
-        {
-            Rectangles.Clear();
-            foreach (var rectangle in nativeRectangles)
-            {
-                var x = (int)(rectangle.X * zoomFactor);
-                var y = (int)(rectangle.Y * zoomFactor);
-                var w = (int)(rectangle.Width * zoomFactor);
-                var h = (int)(rectangle.Height * zoomFactor);
-                Rectangles.Add(new Rectangle(x, y, w, h));
             }
         }
 

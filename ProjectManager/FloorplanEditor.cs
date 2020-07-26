@@ -18,8 +18,7 @@ namespace ProjectManager
         private static readonly float MinZoom = 0.5f;
         private static readonly float MaxZoom = 3f;
 
-        private readonly RectanglePainter Painter;
-        private readonly ZoneContainer ZoneContainer;
+        private readonly ZoneFacade ZoneFacade;
 
         private readonly Image OriginalImage;
         private float ZoomFactor;
@@ -31,8 +30,7 @@ namespace ProjectManager
             InitializeComponent();
 
             ZoomFactor = 1;
-            Painter = new RectanglePainter();
-            ZoneContainer = new ZoneContainer();
+            ZoneFacade = new ZoneFacade();
 
             var floorplan = image;
             OriginalImage = image;
@@ -42,6 +40,7 @@ namespace ProjectManager
 
             this.MouseWheel += this.FloorplanCanvas_MouseWheel;
             FloorplanCanvas.MouseWheel += this.FloorplanCanvas_MouseWheel;
+            ZoneFacade.Repaint += this.ZoneFacade_Repaint;
 
             ZoneTypeComboBox.SelectedIndex = 0;
         }
@@ -55,54 +54,32 @@ namespace ProjectManager
 
         private void FloorplanCanvas_MouseDown(object sender, MouseEventArgs e)
         {
-            Painter.StartDrawing(e.Location);
+            // TODO: Instead of painting a new zone, we may want to move/resize an existing zone
+            ZoneFacade.StartPaintingZone(e.Location);
         }
 
         private void FloorplanCanvas_MouseMove(object sender, MouseEventArgs e)
         {
             var location = e.Location;
-            if (Painter.IsDrawing)
+            if (!ZoneFacade.UpdatePaintingZone(location))
             {
-                Painter.UpdatePosition(location);
-                Repaint();
+                FloorplanCanvas.Cursor = ZoneFacade.GetCursor(location);
             }
-
-            UpdateCursor(location);
         }
 
         private void FloorplanCanvas_MouseUp(object sender, MouseEventArgs e)
         {
-            var newRectangle = Painter.AssignNewNativeRectangle(ZoomFactor);
-            if (newRectangle != default)
-            {
-                ZoneContainer.CreateDesk(newRectangle);
-                ResizeRectangles();
-                Repaint();
-            }
+            ZoneFacade.CreateNewZone(ZoomFactor);
         }
 
         private void FloorplanCanvas_Paint(object sender, PaintEventArgs e)
         {
-            Painter.PaintRectangles(e.Graphics);
+            ZoneFacade.PaintZones(e.Graphics);
         }
 
-        private void UpdateCursor(Point mouseLocation)
+        private void ZoneFacade_Repaint(object sender, EventArgs e)
         {
-            Cursor cursorCandidate;
-            var crossCursor = IsMouseOverRectangle(mouseLocation);
-            if (crossCursor)
-            {
-                cursorCandidate = Cursors.SizeAll;
-            }
-            else
-            {
-                cursorCandidate = Cursors.Default;
-            }
-
-            if (FloorplanCanvas.Cursor != cursorCandidate)
-            {
-                FloorplanCanvas.Cursor = cursorCandidate;
-            }
+            FloorplanCanvas.Invalidate();
         }
 
         private void ZoomImage(int delta)
@@ -123,7 +100,7 @@ namespace ProjectManager
                 return;
             }
 
-            ResizeRectangles();
+            ZoneFacade.ResizeRectangles(ZoomFactor);
 
             Size newSize = new Size((int)(OriginalImage.Width * ZoomFactor), (int)(OriginalImage.Height * ZoomFactor));
 
@@ -136,29 +113,6 @@ namespace ProjectManager
 
             FloorplanCanvas.Size = newSize;
             FloorplanCanvas.Image = bmp;
-        }
-
-        private Rectangle GetRectangleUnderMouse(Point mouseLocation)
-        {
-            return Painter.Rectangles
-                .Where(rect => rect.Contains(mouseLocation))
-                .LastOrDefault(); // hopefully the youngest rectangle - simulating the feel of z-index when rects overlap
-        }
-
-        private bool IsMouseOverRectangle(Point mouseLocation)
-        {
-            return GetRectangleUnderMouse(mouseLocation) != default;
-        }
-
-        private void ResizeRectangles()
-        {
-            var rectangles = ZoneContainer.Zones.Select(zone => zone.Rectangle);
-            Painter.ResizeRectangles(rectangles, ZoomFactor);
-        }
-
-        private void Repaint()
-        {
-            FloorplanCanvas.Invalidate();
         }
     }
 }

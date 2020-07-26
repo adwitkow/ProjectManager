@@ -30,15 +30,15 @@
         {
             this.MainTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.FloorplanCanvasPanel = new System.Windows.Forms.Panel();
+            this.FloorplanCanvas = new ProjectManager.Canvas();
             this.SideControlPanel = new System.Windows.Forms.Panel();
             this.ZoneTypeGroupBox = new System.Windows.Forms.GroupBox();
             this.ZoneTypeComboBox = new System.Windows.Forms.ComboBox();
-            this.FloorplanCanvas = new ProjectManager.Canvas();
             this.MainTableLayoutPanel.SuspendLayout();
             this.FloorplanCanvasPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FloorplanCanvas)).BeginInit();
             this.SideControlPanel.SuspendLayout();
             this.ZoneTypeGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.FloorplanCanvas)).BeginInit();
             this.SuspendLayout();
             // 
             // MainTableLayoutPanel
@@ -66,6 +66,19 @@
             this.FloorplanCanvasPanel.Name = "FloorplanCanvasPanel";
             this.FloorplanCanvasPanel.Size = new System.Drawing.Size(657, 442);
             this.FloorplanCanvasPanel.TabIndex = 1;
+            // 
+            // FloorplanCanvas
+            // 
+            this.FloorplanCanvas.Location = new System.Drawing.Point(235, 148);
+            this.FloorplanCanvas.Name = "FloorplanCanvas";
+            this.FloorplanCanvas.Size = new System.Drawing.Size(315, 252);
+            this.FloorplanCanvas.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.FloorplanCanvas.TabIndex = 0;
+            this.FloorplanCanvas.TabStop = false;
+            this.FloorplanCanvas.Paint += new System.Windows.Forms.PaintEventHandler(this.FloorplanCanvas_Paint);
+            this.FloorplanCanvas.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FloorplanCanvas_MouseDown);
+            this.FloorplanCanvas.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FloorplanCanvas_MouseMove);
+            this.FloorplanCanvas.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FloorplanCanvas_MouseUp);
             // 
             // SideControlPanel
             // 
@@ -101,19 +114,6 @@
             this.ZoneTypeComboBox.Size = new System.Drawing.Size(122, 21);
             this.ZoneTypeComboBox.TabIndex = 0;
             // 
-            // FloorplanCanvas
-            // 
-            this.FloorplanCanvas.Location = new System.Drawing.Point(235, 148);
-            this.FloorplanCanvas.Name = "FloorplanCanvas";
-            this.FloorplanCanvas.Size = new System.Drawing.Size(315, 252);
-            this.FloorplanCanvas.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.FloorplanCanvas.TabIndex = 0;
-            this.FloorplanCanvas.TabStop = false;
-            this.FloorplanCanvas.Paint += new System.Windows.Forms.PaintEventHandler(this.FloorplanCanvas_Paint);
-            this.FloorplanCanvas.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FloorplanCanvas_MouseDown);
-            this.FloorplanCanvas.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FloorplanCanvas_MouseMove);
-            this.FloorplanCanvas.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FloorplanCanvas_MouseUp);
-            // 
             // FloorplanEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -125,10 +125,10 @@
             this.Text = "FloorplanEditor";
             this.MainTableLayoutPanel.ResumeLayout(false);
             this.FloorplanCanvasPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.FloorplanCanvas)).EndInit();
             this.SideControlPanel.ResumeLayout(false);
             this.SideControlPanel.PerformLayout();
             this.ZoneTypeGroupBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.FloorplanCanvas)).EndInit();
             this.ResumeLayout(false);
 
         }
