@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectManager.Zone
+namespace ProjectManager.Zones
 {
     abstract class NamedZone : Zone
     {

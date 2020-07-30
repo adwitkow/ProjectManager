@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
-using ProjectManager.Zone;
+using ProjectManager.Zones;
 using System.Runtime.CompilerServices;
 
 namespace ProjectManager

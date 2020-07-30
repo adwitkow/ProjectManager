@@ -1,5 +1,5 @@
 ﻿using ProjectManager.Properties;
-using ProjectManager.Zone;
+using ProjectManager.Zones;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectManager.Zone.Implementation
+namespace ProjectManager.Zones.Implementation
 {
     class TeamZone : NamedZone
     {

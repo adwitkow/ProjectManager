@@ -71,14 +71,14 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RectanglePainter.cs" />
-    <Compile Include="ZonePainter.cs" />
-    <Compile Include="Zone\Implementation\DeskZone.cs" />
-    <Compile Include="Zone\Implementation\TeamZone.cs" />
-    <Compile Include="Zone\NamedZone.cs" />
-    <Compile Include="Zone\Zone.cs" />
-    <Compile Include="Zone\ZoneContainer.cs" />
-    <Compile Include="Zone\ZoneFacade.cs" />
+    <Compile Include="Drawing\RectanglePainter.cs" />
+    <Compile Include="Drawing\ZonePainter.cs" />
+    <Compile Include="Zones\Implementation\DeskZone.cs" />
+    <Compile Include="Zones\Implementation\TeamZone.cs" />
+    <Compile Include="Zones\NamedZone.cs" />
+    <Compile Include="Zones\Zone.cs" />
+    <Compile Include="Zones\ZoneContainer.cs" />
+    <Compile Include="Zones\ZoneFacade.cs" />
     <EmbeddedResource Include="Canvas.resx">
       <DependentUpon>Canvas.cs</DependentUpon>
     </EmbeddedResource>

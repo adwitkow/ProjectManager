@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectManager.Zone
+namespace ProjectManager.Zones
 {
-    abstract class Zone
+    public abstract class Zone
     {
         public Rectangle Rectangle;
 

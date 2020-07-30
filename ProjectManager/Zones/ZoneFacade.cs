@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectManager.Drawing;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ProjectManager.Zone
+namespace ProjectManager.Zones
 {
     class ZoneFacade
     {
@@ -26,7 +27,7 @@ namespace ProjectManager.Zone
 
         public bool UpdatePaintingZone(Point location)
         {
-            return ZonePainter.UpdatePaintingZone(location));
+            return ZonePainter.UpdatePaintingZone(location);
         }
 
         public void CreateNewZone(float zoomFactor, Point offset)

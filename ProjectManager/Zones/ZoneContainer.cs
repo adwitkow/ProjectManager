@@ -1,4 +1,4 @@
-﻿using ProjectManager.Zone.Implementation;
+﻿using ProjectManager.Zones.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectManager.Zone
+namespace ProjectManager.Zones
 {
     class ZoneContainer
     {
