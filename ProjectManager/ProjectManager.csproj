@@ -56,10 +56,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Canvas.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Extensions.cs" />
+    <Compile Include="Canvas.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Canvas.Designer.cs">
+      <DependentUpon>Canvas.cs</DependentUpon>
+    </Compile>
     <Compile Include="FloorplanEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,6 +79,9 @@
     <Compile Include="Zone\Zone.cs" />
     <Compile Include="Zone\ZoneContainer.cs" />
     <Compile Include="Zone\ZoneFacade.cs" />
+    <EmbeddedResource Include="Canvas.resx">
+      <DependentUpon>Canvas.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FloorplanEditor.resx">
       <DependentUpon>FloorplanEditor.cs</DependentUpon>
     </EmbeddedResource>

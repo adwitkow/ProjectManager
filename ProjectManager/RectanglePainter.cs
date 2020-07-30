@@ -37,12 +37,12 @@ namespace ProjectManager
             CurrentPosition = position;
         }
 
-        public Rectangle GetCurrentNativeRectangle(float zoomFactor)
+        public Rectangle GetCurrentNativeRectangle(float zoomFactor, Point offset)
         {
             if (IsDrawing)
             {
                 IsDrawing = false;
-                var rectangle = CreateNativeRectangle(zoomFactor);
+                var rectangle = CreateNativeRectangle(zoomFactor, offset);
                 if (rectangle.Width > 0 && rectangle.Height > 0)
                 {
                     return rectangle;
@@ -61,16 +61,16 @@ namespace ProjectManager
 
             if (IsDrawing)
             {
-                graphics.DrawRectangle(Pens.Red, CreateNativeRectangle(1));
+                graphics.DrawRectangle(Pens.Red, CreateNativeRectangle(1, Point.Empty));
             }
         }
 
-        private Rectangle CreateNativeRectangle(float zoomFactor)
+        private Rectangle CreateNativeRectangle(float zoomFactor, Point offset)
         {
-            var x1 = (int)(StartPosition.X / zoomFactor);
-            var x2 = (int)(CurrentPosition.X / zoomFactor);
-            var y1 = (int)(StartPosition.Y / zoomFactor);
-            var y2 = (int)(CurrentPosition.Y / zoomFactor);
+            var x1 = (int)(StartPosition.X / zoomFactor + offset.X);
+            var x2 = (int)(CurrentPosition.X / zoomFactor + offset.X);
+            var y1 = (int)(StartPosition.Y / zoomFactor + offset.Y);
+            var y2 = (int)(CurrentPosition.Y / zoomFactor + offset.Y);
             return new Rectangle(
                 Math.Min(x1, x2),
                 Math.Min(y1, y2),

@@ -10,8 +10,6 @@ namespace ProjectManager.Zone
 {
     class ZoneFacade
     {
-        public event EventHandler Repaint;
-
         private readonly ZoneContainer ZoneContainer;
         private readonly ZonePainter ZonePainter;
 
@@ -28,22 +26,16 @@ namespace ProjectManager.Zone
 
         public bool UpdatePaintingZone(Point location)
         {
-            if (ZonePainter.UpdatePaintingZone(location))
-            {
-                CallRepaint();
-                return true;
-            }
-            return false;
+            return ZonePainter.UpdatePaintingZone(location));
         }
 
-        public void CreateNewZone(float zoomFactor)
+        public void CreateNewZone(float zoomFactor, Point offset)
         {
-            var newZoneRectangle = ZonePainter.CreateZoneRectangle(zoomFactor);
+            var newZoneRectangle = ZonePainter.CreateZoneRectangle(zoomFactor, offset);
             if (newZoneRectangle != null)
             {
                 ZoneContainer.CreateDesk(newZoneRectangle.Value);
-                ResizeRectangles(zoomFactor);
-                CallRepaint();
+                ResizeRectangles(zoomFactor, offset);
             }
         }
 
@@ -59,10 +51,10 @@ namespace ProjectManager.Zone
                 .LastOrDefault(); // hopefully the youngest rectangle - simulating the feel of z-index when rects overlap
         }
 
-        public void ResizeRectangles(float zoomFactor)
+        public void ResizeRectangles(float zoomFactor, Point offset)
         {
             var rectangles = ZoneContainer.Zones.Select(zone => zone.Rectangle);
-            ZonePainter.ResizeRectangles(rectangles, zoomFactor);
+            ZonePainter.ResizeRectangles(rectangles, zoomFactor, offset);
         }
 
         public Cursor GetCursor(Point position)
@@ -82,11 +74,6 @@ namespace ProjectManager.Zone
             }
 
             return cursorCandidate;
-        }
-
-        private void CallRepaint()
-        {
-            Repaint?.Invoke(this, EventArgs.Empty);
         }
     }
 }

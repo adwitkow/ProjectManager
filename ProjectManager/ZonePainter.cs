@@ -34,9 +34,9 @@ namespace ProjectManager
             return false;
         }
 
-        public Rectangle? CreateZoneRectangle(float zoomFactor)
+        public Rectangle? CreateZoneRectangle(float zoomFactor, Point offset)
         {
-            var newRectangle = RectanglePainter.GetCurrentNativeRectangle(zoomFactor);
+            var newRectangle = RectanglePainter.GetCurrentNativeRectangle(zoomFactor, offset);
             if (newRectangle != default)
             {
                 return newRectangle;
@@ -49,13 +49,13 @@ namespace ProjectManager
             RectanglePainter.PaintRectangles(graphics, Rectangles.ToArray());
         }
 
-        public void ResizeRectangles(IEnumerable<Rectangle> nativeRectangles, float zoomFactor)
+        public void ResizeRectangles(IEnumerable<Rectangle> nativeRectangles, float zoomFactor, Point offset)
         {
             Rectangles.Clear();
             foreach (var rectangle in nativeRectangles)
             {
-                var x = (int)(rectangle.X * zoomFactor);
-                var y = (int)(rectangle.Y * zoomFactor);
+                var x = (int)((rectangle.X * zoomFactor) - (offset.X * zoomFactor));
+                var y = (int)((rectangle.Y * zoomFactor) - (offset.Y * zoomFactor));
                 var w = (int)(rectangle.Width * zoomFactor);
                 var h = (int)(rectangle.Height * zoomFactor);
                 Rectangles.Add(new Rectangle(x, y, w, h));
