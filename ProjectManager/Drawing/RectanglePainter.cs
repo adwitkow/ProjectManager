@@ -11,7 +11,7 @@ namespace ProjectManager.Drawing
         private static readonly Color FillColor = Color.FromArgb(128, 255, 215, 0);
         private static readonly Color BorderColor = Color.FromArgb(255, 255, 140, 0);
 
-        public bool IsDrawing { get; private set; }
+        private bool isDrawing;
 
         private Point StartPosition;
         private Point CurrentPosition;
@@ -29,19 +29,27 @@ namespace ProjectManager.Drawing
         {
             CurrentPosition = position;
             StartPosition = position;
-            IsDrawing = true;
+            isDrawing = true;
         }
 
-        public void UpdatePosition(Point position)
+        public bool UpdatePosition(Point position)
         {
-            CurrentPosition = position;
+            if (isDrawing)
+            {
+                CurrentPosition = position;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public Rectangle GetCurrentNativeRectangle(float zoomFactor, Point offset)
         {
-            if (IsDrawing)
+            if (isDrawing)
             {
-                IsDrawing = false;
+                isDrawing = false;
                 var rectangle = CreateNativeRectangle(zoomFactor, offset);
                 if (rectangle.Width > 0 && rectangle.Height > 0)
                 {
@@ -59,7 +67,7 @@ namespace ProjectManager.Drawing
                 graphics.DrawRectangles(Pen, rectangles);
             }
 
-            if (IsDrawing)
+            if (isDrawing)
             {
                 graphics.DrawRectangle(Pens.Red, CreateNativeRectangle(1, Point.Empty));
             }

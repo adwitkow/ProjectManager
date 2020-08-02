@@ -26,12 +26,7 @@ namespace ProjectManager.Drawing
 
         public bool UpdatePaintingZone(Point mousePosition)
         {
-            if (RectanglePainter.IsDrawing)
-            {
-                RectanglePainter.UpdatePosition(mousePosition);
-                return true;
-            }
-            return false;
+            return RectanglePainter.UpdatePosition(mousePosition);
         }
 
         public Rectangle? CreateZoneRectangle(float zoomFactor, Point offset)
