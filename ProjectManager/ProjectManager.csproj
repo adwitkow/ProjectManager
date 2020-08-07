@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drawing\Events\RectangleEventHandler.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Canvas.cs">
       <SubType>UserControl</SubType>
@@ -72,13 +73,13 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drawing\RectanglePainter.cs" />
-    <Compile Include="Drawing\ZonePainter.cs" />
     <Compile Include="Zones\Implementation\DeskZone.cs" />
     <Compile Include="Zones\Implementation\TeamZone.cs" />
     <Compile Include="Zones\NamedZone.cs" />
     <Compile Include="Zones\Zone.cs" />
     <Compile Include="Zones\ZoneContainer.cs" />
     <Compile Include="Zones\ZoneFacade.cs" />
+    <Compile Include="Zones\ZoneType.cs" />
     <EmbeddedResource Include="Canvas.resx">
       <DependentUpon>Canvas.cs</DependentUpon>
     </EmbeddedResource>
@@ -112,6 +113,7 @@
   <ItemGroup>
     <None Include="Resources\Floorplan.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

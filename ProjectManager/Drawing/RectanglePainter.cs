@@ -25,7 +25,7 @@ namespace ProjectManager.Drawing
             this.Pen = new Pen(BorderColor) { DashStyle = DashStyle.Dash };
         }
 
-        public void StartDrawing(Point position)
+        public void BeginRectangleCreation(Point position)
         {
             CurrentPosition = position;
             StartPosition = position;
@@ -45,12 +45,12 @@ namespace ProjectManager.Drawing
             }
         }
 
-        public Rectangle GetCurrentNativeRectangle(float zoomFactor, Point offset)
+        public Rectangle FinishRectangleCreation()
         {
             if (isDrawing)
             {
                 isDrawing = false;
-                var rectangle = CreateNativeRectangle(zoomFactor, offset);
+                var rectangle = GetCreatedRectangle();
                 if (rectangle.Width > 0 && rectangle.Height > 0)
                 {
                     return rectangle;
@@ -65,20 +65,22 @@ namespace ProjectManager.Drawing
             {
                 graphics.FillRectangles(Brush, rectangles);
                 graphics.DrawRectangles(Pen, rectangles);
+
             }
 
             if (isDrawing)
             {
-                graphics.DrawRectangle(Pens.Red, CreateNativeRectangle(1, Point.Empty));
+                graphics.DrawRectangle(Pens.Red, GetCreatedRectangle());
             }
         }
 
-        private Rectangle CreateNativeRectangle(float zoomFactor, Point offset)
+        private Rectangle GetCreatedRectangle()
         {
-            var x1 = (int)(StartPosition.X / zoomFactor + offset.X);
-            var x2 = (int)(CurrentPosition.X / zoomFactor + offset.X);
-            var y1 = (int)(StartPosition.Y / zoomFactor + offset.Y);
-            var y2 = (int)(CurrentPosition.Y / zoomFactor + offset.Y);
+            var x1 = StartPosition.X;
+            var x2 = CurrentPosition.X;
+            var y1 = StartPosition.Y;
+            var y2 = CurrentPosition.Y;
+
             return new Rectangle(
                 Math.Min(x1, x2),
                 Math.Min(y1, y2),

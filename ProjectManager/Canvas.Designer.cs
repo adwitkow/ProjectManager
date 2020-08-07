@@ -30,6 +30,7 @@
         {
             this.HorizontalScrollBar = new System.Windows.Forms.HScrollBar();
             this.VerticalScrollBar = new System.Windows.Forms.VScrollBar();
+            this.DummyPanel = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // HorizontalScrollBar
@@ -43,6 +44,7 @@
             this.HorizontalScrollBar.Size = new System.Drawing.Size(133, 17);
             this.HorizontalScrollBar.TabIndex = 0;
             this.HorizontalScrollBar.ValueChanged += new System.EventHandler(this.HorizontalScrollBar_ValueChanged);
+            this.HorizontalScrollBar.MouseEnter += new System.EventHandler(this.ScrollBar_MouseEnter);
             // 
             // VerticalScrollBar
             // 
@@ -55,11 +57,21 @@
             this.VerticalScrollBar.Size = new System.Drawing.Size(17, 133);
             this.VerticalScrollBar.TabIndex = 1;
             this.VerticalScrollBar.ValueChanged += new System.EventHandler(this.VerticalScrollBar_ValueChanged);
+            this.VerticalScrollBar.MouseEnter += new System.EventHandler(this.ScrollBar_MouseEnter);
+            // 
+            // DummyPanel
+            // 
+            this.DummyPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.DummyPanel.Location = new System.Drawing.Point(133, 133);
+            this.DummyPanel.Name = "DummyPanel";
+            this.DummyPanel.Size = new System.Drawing.Size(17, 17);
+            this.DummyPanel.TabIndex = 2;
             // 
             // Canvas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.DummyPanel);
             this.Controls.Add(this.VerticalScrollBar);
             this.Controls.Add(this.HorizontalScrollBar);
             this.Name = "Canvas";
@@ -71,5 +83,6 @@
 
         private System.Windows.Forms.HScrollBar HorizontalScrollBar;
         private System.Windows.Forms.VScrollBar VerticalScrollBar;
+        private System.Windows.Forms.Panel DummyPanel;
     }
 }
