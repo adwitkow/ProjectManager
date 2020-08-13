@@ -1,4 +1,5 @@
-﻿using ProjectManager.Properties;
+﻿using ProjectManager.Drawing;
+using ProjectManager.Properties;
 using ProjectManager.Zones;
 using ProjectManager.Zones.Implementation;
 using System;
@@ -16,7 +17,8 @@ namespace ProjectManager
 {
     public partial class FloorplanEditor : Form
     {
-        private readonly ZoneFacade zoneFacade;
+        private readonly ZoneFacade ZoneFacade;
+        private readonly CanvasZonePainter CanvasZonePainter;
 
         public FloorplanEditor() : this(Resources.Floorplan) { }
 
@@ -26,17 +28,20 @@ namespace ProjectManager
 
             FloorplanCanvas.Image = image;
 
-            zoneFacade = new ZoneFacade();
+            ZoneFacade = new ZoneFacade();
+            CanvasZonePainter = new CanvasZonePainter(FloorplanCanvas, new RectanglePainter());
+            CanvasZonePainter.RectangleCreated += this.CanvasZonePainter_RectangleCreated;
 
             ZoneTypeComboBox.DataSource = Enum.GetValues(typeof(ZoneType));
             ZoneTypeComboBox.SelectedIndex = 0;
         }
 
-        private void FloorplanCanvas_RectangleCreated(object sender, Drawing.Events.RectangleEventArgs e)
+        private void CanvasZonePainter_RectangleCreated(object sender, Drawing.Events.RectangleEventArgs e)
         {
             var selectedZoneType = (ZoneType)ZoneTypeComboBox.SelectedItem;
-            zoneFacade.CreateNewZone(selectedZoneType, e.Rectangle);
-            FloorplanCanvas.NativeRectangles = zoneFacade.Zones.Select(zone => zone.Rectangle);
+            ZoneFacade.CreateNewZone(selectedZoneType, e.Rectangle);
+
+            CanvasZonePainter.Zones = ZoneFacade.Zones;
         }
     }
 }

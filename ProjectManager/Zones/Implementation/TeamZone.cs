@@ -18,5 +18,10 @@ namespace ProjectManager.Zones.Implementation
         public TeamZone(string name, Rectangle rectangle) : base(name, rectangle)
         {
         }
+
+        public override Zone Clone()
+        {
+            return new TeamZone(Name, Rectangle);
+        }
     }
 }

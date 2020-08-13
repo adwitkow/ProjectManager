@@ -29,7 +29,7 @@ namespace ProjectManager.Zones
                     ZoneContainer.CreateDesk(newZoneRectangle);
                     break;
                 case ZoneType.Team:
-                    ZoneContainer.CreateTeam("DebugTeam", newZoneRectangle);
+                    ZoneContainer.CreateTeam("Team", newZoneRectangle);
                     break;
                 default:
                     break;

@@ -8,22 +8,10 @@ namespace ProjectManager.Drawing
 {
     class RectanglePainter
     {
-        private static readonly Color FillColor = Color.FromArgb(128, 255, 215, 0);
-        private static readonly Color BorderColor = Color.FromArgb(255, 255, 140, 0);
-
         private bool isDrawing;
 
         private Point StartPosition;
         private Point CurrentPosition;
-
-        private readonly Brush Brush;
-        private readonly Pen Pen;
-
-        public RectanglePainter()
-        {
-            this.Brush = new SolidBrush(FillColor);
-            this.Pen = new Pen(BorderColor) { DashStyle = DashStyle.Dash };
-        }
 
         public void BeginRectangleCreation(Point position)
         {
@@ -59,13 +47,15 @@ namespace ProjectManager.Drawing
             return default;
         }
 
-        public void PaintRectangles(Graphics graphics, Rectangle[] rectangles)
+        public void PaintRectangles(Graphics graphics, IEnumerable<ColoredRectangleGroup> rectangleGroups)
         {
-            if (rectangles.Length > 0)
+            foreach (var rectangleGroup in rectangleGroups)
             {
-                graphics.FillRectangles(Brush, rectangles);
-                graphics.DrawRectangles(Pen, rectangles);
-
+                var brush = new SolidBrush(rectangleGroup.FillColor);
+                var pen = new Pen(rectangleGroup.BorderColor);
+                var rectangles = rectangleGroup.Rectangles;
+                graphics.FillRectangles(brush, rectangles);
+                graphics.DrawRectangles(pen, rectangles);
             }
 
             if (isDrawing)

@@ -18,5 +18,10 @@ namespace ProjectManager.Zones.Implementation
         public DeskZone(Rectangle rectangle) : base(rectangle)
         {
         }
+
+        public override Zone Clone()
+        {
+            return new DeskZone(Rectangle);
+        }
     }
 }

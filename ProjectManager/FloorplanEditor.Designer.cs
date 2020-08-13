@@ -73,10 +73,8 @@
             this.FloorplanCanvas.Image = null;
             this.FloorplanCanvas.Location = new System.Drawing.Point(0, 0);
             this.FloorplanCanvas.Name = "FloorplanCanvas";
-            this.FloorplanCanvas.NativeRectangles = ((System.Collections.Generic.IEnumerable<System.Drawing.Rectangle>)(resources.GetObject("FloorplanCanvas.NativeRectangles")));
             this.FloorplanCanvas.Size = new System.Drawing.Size(629, 442);
             this.FloorplanCanvas.TabIndex = 0;
-            this.FloorplanCanvas.RectangleCreated += new System.EventHandler<ProjectManager.Drawing.Events.RectangleEventArgs>(this.FloorplanCanvas_RectangleCreated);
             // 
             // SideControlPanel
             // 

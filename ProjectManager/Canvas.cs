@@ -32,21 +32,16 @@ namespace ProjectManager
             }
         }
 
-        public IEnumerable<Rectangle> NativeRectangles { get; set; }
-        public ICollection<Rectangle> Rectangles { get; private set; }
-
         public event EventHandler ImageChanged;
-        public event EventHandler<RectangleEventArgs> RectangleCreated;
+        public event EventHandler ViewChanged;
 
-        private float ZoomLevel { get; set; }
+        public Point BoundMouseLocation { get; private set; }
 
-        private Point BoundMouseLocation { get; set; }
-        private int CanvasWidth { get => this.Width - SystemInformation.VerticalScrollBarWidth; }
-        private int CanvasHeight { get => this.Height - SystemInformation.HorizontalScrollBarHeight; }
-        private new int HorizontalScroll { get => this.HorizontalScrollBar.Value; }
-        private new int VerticalScroll { get => this.VerticalScrollBar.Value; }
-
-        private readonly RectanglePainter RectanglePainter;
+        public float ZoomLevel { get; set; }
+        public new int HorizontalScroll { get => this.HorizontalScrollBar.Value; }
+        public new int VerticalScroll { get => this.VerticalScrollBar.Value; }
+        public int ViewportWidth { get; private set; }
+        public int ViewportHeight { get; private set; }
 
         private Image _image;
 
@@ -54,37 +49,28 @@ namespace ProjectManager
         {
             InitializeComponent();
 
-            this.NativeRectangles = new List<Rectangle>();
-            this.Rectangles = new List<Rectangle>();
             this.ZoomLevel = 1f;
-
             this.DoubleBuffered = true;
-            //this.SetStyle(ControlStyles.ResizeRedraw, true);
-
-            this.RectanglePainter = new RectanglePainter();
         }
 
         protected void OnImageChanged(EventArgs e)
         {
             ImageChanged?.Invoke(this, e);
 
+            OnViewChanged(EventArgs.Empty);
+
             UpdateScrollbars();
             Invalidate();
         }
 
-        protected void OnRectangleCreated(RectangleEventArgs e)
+        protected void OnViewChanged(EventArgs e)
         {
-            RectangleCreated?.Invoke(this, e);
+            ViewChanged?.Invoke(this, e);
 
-            MoveResizeRectangles();
+            ViewportWidth = this.Width - SystemInformation.VerticalScrollBarWidth;
+            ViewportHeight = this.Height - SystemInformation.HorizontalScrollBarHeight;
+
             Invalidate();
-        }
-
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            // TODO: Instead of painting a new zone, we may want to move/resize an existing zone
-            RectanglePainter.BeginRectangleCreation(BoundMouseLocation);
-            base.OnMouseDown(e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -97,93 +83,22 @@ namespace ProjectManager
             var clampedX = x.Clamp(0, maxX);
             var clampedY = y.Clamp(0, maxY);
 
-            var cursorOutOfBounds = clampedX != x || clampedY != y;
-
             BoundMouseLocation = new Point(clampedX, clampedY);
 
-            if (!RectanglePainter.UpdatePosition(BoundMouseLocation))
-            {
-                if (cursorOutOfBounds)
-                {
-                    Cursor = Cursors.Default;
-                }
-                else
-                {
-                    Cursor = GetCursor(e.Location);
-                }
-            }
-            else
-            {
-                Invalidate();
-            }
-
             base.OnMouseMove(e);
-        }
-
-        private void ScrollBar_MouseEnter(object sender, EventArgs e)
-        {
-            Cursor = Cursors.Default;
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            var rect = RectanglePainter.FinishRectangleCreation();
-            if (rect != default)
-            {
-                OnRectangleCreated(new RectangleEventArgs(ConvertRectangleToNative(rect)));
-            }
-            base.OnMouseUp(e);
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             PaintZoomedVisibleImage(e.Graphics);
-            var bounds = new Rectangle(0, 0, CanvasWidth, CanvasHeight);
-            // bounds.Contains(rect)
-            var visibleRectangles = Rectangles.Where(rect => bounds.IntersectsWith(rect));
-            RectanglePainter.PaintRectangles(e.Graphics, visibleRectangles.ToArray());
-
-            var originalFont = new Font("Arial Black", 24 * ZoomLevel, FontStyle.Bold, GraphicsUnit.Point);
-            var format = new StringFormat();
-            format.Alignment = StringAlignment.Center;
-            format.LineAlignment = StringAlignment.Far;
-            foreach (var rectangle in visibleRectangles)
-            {
-                var x = rectangle.X;
-                var y = rectangle.Y;
-                var width = rectangle.Width;
-                var height = rectangle.Height;
-
-                var font = GetAdjustedFont(e.Graphics, "DebugTeam", originalFont, width, height, 6);
-                e.Graphics.DrawString("DebugTeam", font, Brushes.Black, new RectangleF(x, y, width, height), format);
-            }
 
             base.OnPaint(e);
         }
 
-        private Font GetAdjustedFont(Graphics g, string graphicString, Font originalFont, int containerWidth, int maxFontSize, int minFontSize)
-        {
-            Font testFont = originalFont;
-            // We utilize MeasureString which we get via a control instance           
-            for (int adjustedSize = maxFontSize; adjustedSize >= minFontSize; adjustedSize--)
-            {
-                testFont = new Font(originalFont.Name, adjustedSize, originalFont.Style);
-
-                // Test the string with the new size
-                SizeF adjustedSizeNew = g.MeasureString(graphicString, testFont);
-
-                if (containerWidth > Convert.ToInt32(adjustedSizeNew.Width))
-                {
-                    // Good font, return it
-                    return testFont;
-                }
-            }
-
-            return testFont;
-        }
-
         protected override void OnMouseWheel(MouseEventArgs e)
         {
+            base.OnMouseWheel(e);
+
             if (e.Delta > 0)
             {
                 ZoomLevel /= 0.8f;
@@ -196,9 +111,8 @@ namespace ProjectManager
             ZoomLevel = ZoomLevel.Clamp(MinZoom, MaxZoom);
 
             UpdateScrollbars();
-            MoveResizeRectangles();
-            Invalidate();
-            base.OnMouseWheel(e);
+
+            OnViewChanged(EventArgs.Empty);
         }
 
         protected override void OnResize(EventArgs e)
@@ -206,21 +120,24 @@ namespace ProjectManager
             if (Image != null)
             {
                 UpdateScrollbars();
-                Invalidate();
+                OnViewChanged(EventArgs.Empty);
             }
             base.OnResize(e);
         }
 
         private void HorizontalScrollBar_ValueChanged(object sender, EventArgs e)
         {
-            MoveResizeRectangles();
-            Invalidate();
+            OnViewChanged(EventArgs.Empty);
         }
 
         private void VerticalScrollBar_ValueChanged(object sender, EventArgs e)
         {
-            MoveResizeRectangles();
-            Invalidate();
+            OnViewChanged(EventArgs.Empty);
+        }
+
+        private void ScrollBar_MouseEnter(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
         }
 
         private void PaintZoomedVisibleImage(Graphics graphics)
@@ -246,14 +163,14 @@ namespace ProjectManager
             RectangleF destinationRect = new RectangleF(
                 0,
                 0,
-                CanvasWidth,
-                CanvasHeight);
+                ViewportWidth,
+                ViewportHeight);
 
             RectangleF sourceRect = new RectangleF(
                 HorizontalScroll,
                 VerticalScroll,
-                CanvasWidth / ZoomLevel,
-                CanvasHeight / ZoomLevel);
+                ViewportWidth / ZoomLevel,
+                ViewportHeight / ZoomLevel);
             graphics.DrawImage(
                 Image,
                 destinationRect,
@@ -266,8 +183,8 @@ namespace ProjectManager
 
         private void UpdateScrollbars()
         {
-            var vMax = (int)Math.Max(0, Image.Height - CanvasHeight / ZoomLevel);
-            var hMax = (int)Math.Max(0, Image.Width - CanvasWidth / ZoomLevel);
+            var vMax = (int)Math.Max(0, Image.Height - ViewportHeight / ZoomLevel);
+            var hMax = (int)Math.Max(0, Image.Width - ViewportWidth / ZoomLevel);
 
             UpdateScrollBar(VerticalScrollBar, vMax);
             UpdateScrollBar(HorizontalScrollBar, hMax);
@@ -289,59 +206,6 @@ namespace ProjectManager
                 scrollbar.Value = Math.Abs(scrollbar.Value.Clamp(0, maxSize));
                 scrollbar.Enabled = true;
             }
-        }
-
-        private void MoveResizeRectangles()
-        {
-            Rectangles.Clear();
-            foreach (var rectangle in NativeRectangles)
-            {
-                var x = (int)((rectangle.X - HorizontalScroll) * ZoomLevel);
-                var y = (int)((rectangle.Y - VerticalScroll) * ZoomLevel);
-                var w = (int)(rectangle.Width * ZoomLevel);
-                var h = (int)(rectangle.Height * ZoomLevel);
-                Rectangles.Add(new Rectangle(x, y, w, h));
-            }
-        }
-
-        private Rectangle GetTopRectangleAtPosition(Point position)
-        {
-            return Rectangles
-                .Where(rect => rect.Contains(position))
-                .LastOrDefault(); // hopefully the youngest rectangle - simulating the feel of z-index when rects overlap
-        }
-
-        private Cursor GetCursor(Point position)
-        {
-            var crossCursor = GetTopRectangleAtPosition(position) != default;
-
-            // TODO: We could also set the cursor to 'resize' arrow or text beam here
-
-            Cursor cursorCandidate;
-            if (crossCursor)
-            {
-                cursorCandidate = Cursors.SizeAll;
-            }
-            else
-            {
-                cursorCandidate = Cursors.Cross;
-            }
-
-            return cursorCandidate;
-        }
-
-        private Rectangle ConvertRectangleToNative(Rectangle rectangle)
-        {
-            var x1 = (int)(rectangle.Left / ZoomLevel + HorizontalScroll);
-            var x2 = (int)(rectangle.Right / ZoomLevel + HorizontalScroll);
-            var y1 = (int)(rectangle.Top / ZoomLevel + VerticalScroll);
-            var y2 = (int)(rectangle.Bottom / ZoomLevel + VerticalScroll);
-
-            return new Rectangle(
-                Math.Min(x1, x2),
-                Math.Min(y1, y2),
-                Math.Abs(x1 - x2),
-                Math.Abs(y1 - y2));
         }
     }
 }

@@ -18,5 +18,7 @@ namespace ProjectManager.Zones
         {
             this.Rectangle = rectangle;
         }
+
+        public abstract Zone Clone();
     }
 }
