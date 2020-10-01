@@ -59,9 +59,11 @@ namespace ProjectManager.Drawing
             var namedZones = visibleZones.OfType<NamedZone>();
 
             var originalFont = new Font("Arial Black",24 * Canvas.ZoomLevel, FontStyle.Bold, GraphicsUnit.Point);
-            var format = new StringFormat();
-            format.Alignment = StringAlignment.Center;
-            format.LineAlignment = StringAlignment.Far;
+            var format = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Far
+            };
             foreach (var zone in namedZones)
             {
                 var rectangle = zone.Rectangle;
