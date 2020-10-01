@@ -21,6 +21,8 @@ namespace ProjectManager.Drawing
         private readonly Canvas Canvas;
         private readonly RectanglePainter RectanglePainter;
 
+        private Point MousePosition { get; set; }
+
         public CanvasZonePainter(Canvas canvas, RectanglePainter rectanglePainter)
         {
             this.Canvas = canvas;
@@ -39,6 +41,7 @@ namespace ProjectManager.Drawing
         private void Canvas_ViewChanged(object sender, EventArgs e)
         {
             ResizedZones = ResizeZones();
+            UpdateCursor(MousePosition, Canvas.BoundMouseLocation);
         }
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
@@ -91,8 +94,19 @@ namespace ProjectManager.Drawing
 
         private void Canvas_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
+            MousePosition = e.Location;
             var boundLocation = Canvas.BoundMouseLocation;
-            var cursorOutOfBounds = e.X != boundLocation.X || e.Y != boundLocation.Y;
+            UpdateCursor(e.Location, boundLocation);
+        }
+
+        private void Canvas_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            RectanglePainter.BeginRectangleCreation(Canvas.BoundMouseLocation);
+        }
+
+        private void UpdateCursor(Point realMousePosition, Point boundLocation)
+        {
+            var cursorOutOfBounds = realMousePosition.X != boundLocation.X || realMousePosition.Y != boundLocation.Y;
             if (!RectanglePainter.UpdatePosition(Canvas.BoundMouseLocation))
             {
                 if (cursorOutOfBounds)
@@ -101,18 +115,13 @@ namespace ProjectManager.Drawing
                 }
                 else
                 {
-                    Canvas.Cursor = GetCursor(e.Location);
+                    Canvas.Cursor = GetCursor(realMousePosition);
                 }
             }
             else
             {
                 Canvas.Invalidate();
             }
-        }
-
-        private void Canvas_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            RectanglePainter.BeginRectangleCreation(Canvas.BoundMouseLocation);
         }
 
         private Cursor GetCursor(Point position)
