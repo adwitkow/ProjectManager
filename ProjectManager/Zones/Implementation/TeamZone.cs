@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectManager.Model;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -12,12 +13,13 @@ namespace ProjectManager.Zones.Implementation
         private static readonly Color Lime = Color.FromArgb(64, 0, 255, 0);
         private static readonly Color DarkGreen = Color.FromArgb(255, 0, 100, 0);
 
-        public override Color FillColor => Lime;
-        public override Color BorderColor => DarkGreen;
-
         public TeamZone(string name, Rectangle rectangle) : base(name, rectangle)
         {
+            FillColor = Lime;
+            BorderColor = DarkGreen;
         }
+
+        private TeamZone() : base("", Rectangle.Empty) { }
 
         public override Zone Clone()
         {

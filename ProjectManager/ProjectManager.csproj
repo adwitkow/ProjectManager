@@ -72,13 +72,17 @@
     <Compile Include="FloorplanEditor.Designer.cs">
       <DependentUpon>FloorplanEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\Desk.cs" />
+    <Compile Include="Model\Person.cs" />
+    <Compile Include="Model\Team.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProjectContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drawing\RectanglePainter.cs" />
     <Compile Include="Zones\Implementation\DeskZone.cs" />
     <Compile Include="Zones\Implementation\TeamZone.cs" />
     <Compile Include="Zones\NamedZone.cs" />
-    <Compile Include="Zones\Zone.cs" />
+    <Compile Include="Model\Zone.cs" />
     <Compile Include="Zones\ZoneContainer.cs" />
     <Compile Include="Zones\ZoneFacade.cs" />
     <Compile Include="Zones\ZoneType.cs" />

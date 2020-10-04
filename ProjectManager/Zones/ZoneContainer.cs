@@ -1,4 +1,5 @@
-﻿using ProjectManager.Zones.Implementation;
+﻿using ProjectManager.Model;
+using ProjectManager.Zones.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

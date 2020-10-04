@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectManager.Model;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -12,12 +13,13 @@ namespace ProjectManager.Zones.Implementation
         private static readonly Color Gold = Color.FromArgb(128, 255, 215, 0);
         private static readonly Color DarkOrange = Color.FromArgb(255, 255, 140, 0);
 
-        public override Color FillColor => Gold;
-        public override Color BorderColor => DarkOrange;
-
         public DeskZone(Rectangle rectangle) : base(rectangle)
         {
+            FillColor = Gold;
+            BorderColor = DarkOrange;
         }
+
+        private DeskZone() { }
 
         public override Zone Clone()
         {
