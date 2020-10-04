@@ -15,28 +15,35 @@ namespace ProjectManager.Drawing
     {
         public event EventHandler<RectangleEventArgs> RectangleCreated;
 
-        public IEnumerable<Zone> Zones;
+        public IEnumerable<Zone> Zones => ZoneFacade.Zones;
 
         private IEnumerable<Zone> ResizedZones;
 
+        private readonly ZoneFacade ZoneFacade;
         private readonly Canvas Canvas;
         private readonly RectanglePainter RectanglePainter;
 
         private Point MousePosition { get; set; }
 
-        public CanvasZonePainter(Canvas canvas, RectanglePainter rectanglePainter)
+        public CanvasZonePainter(ZoneFacade zoneFacade, Canvas canvas, RectanglePainter rectanglePainter)
         {
+            this.ZoneFacade = zoneFacade;
             this.Canvas = canvas;
             this.RectanglePainter = rectanglePainter;
 
             ResizedZones = new List<Zone>();
-            Zones = new List<Zone>();
 
             canvas.MouseDown += this.Canvas_MouseDown;
             canvas.MouseMove += this.Canvas_MouseMove;
             canvas.MouseUp += this.Canvas_MouseUp;
             canvas.Paint += this.Canvas_Paint;
             canvas.ViewChanged += this.Canvas_ViewChanged;
+        }
+
+        public void UpdateZones()
+        {
+            ResizedZones = ResizeZones();
+            Canvas.Invalidate();
         }
 
         private void Canvas_ViewChanged(object sender, EventArgs e)
@@ -82,8 +89,7 @@ namespace ProjectManager.Drawing
         {
             RectangleCreated?.Invoke(this, e);
 
-            ResizedZones = ResizeZones();
-            Canvas.Invalidate();
+            UpdateZones();
         }
 
         private void Canvas_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)

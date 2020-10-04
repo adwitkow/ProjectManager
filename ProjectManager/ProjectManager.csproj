@@ -59,6 +59,12 @@
     <Compile Include="Drawing\CanvasZonePainter.cs" />
     <Compile Include="Drawing\ColoredRectangleGroup.cs" />
     <Compile Include="Drawing\Events\RectangleEventHandler.cs" />
+    <Compile Include="EditorPanel\ZoneEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EditorPanel\ZoneEditor.Designer.cs">
+      <DependentUpon>ZoneEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="Canvas.cs">
       <SubType>UserControl</SubType>
@@ -83,11 +89,13 @@
     <Compile Include="Zones\Implementation\TeamZone.cs" />
     <Compile Include="Zones\NamedZone.cs" />
     <Compile Include="Model\Zone.cs" />
-    <Compile Include="Zones\ZoneContainer.cs" />
     <Compile Include="Zones\ZoneFacade.cs" />
     <Compile Include="Zones\ZoneType.cs" />
     <EmbeddedResource Include="Canvas.resx">
       <DependentUpon>Canvas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditorPanel\ZoneEditor.resx">
+      <DependentUpon>ZoneEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FloorplanEditor.resx">
       <DependentUpon>FloorplanEditor.cs</DependentUpon>

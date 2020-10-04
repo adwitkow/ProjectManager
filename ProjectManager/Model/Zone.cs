@@ -12,10 +12,42 @@ namespace ProjectManager.Model
         // TODO: Clean up this object, decouple the DB model
 
         public int Id { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public int X
+        {
+            get => _x;
+            set
+            {
+                _x = value;
+                ForceUpdateRectangle();
+            }
+        }
+        public int Y
+        {
+            get => _y;
+            set
+            {
+                _y = value;
+                ForceUpdateRectangle();
+            }
+        }
+        public int Width
+        {
+            get => _width;
+            set
+            {
+                _width = value;
+                ForceUpdateRectangle();
+            }
+        }
+        public int Height
+        {
+            get => _height;
+            set
+            {
+                _height = value;
+                ForceUpdateRectangle();
+            }
+        }
 
         public Rectangle Rectangle
         {
@@ -29,10 +61,10 @@ namespace ProjectManager.Model
             }
             set
             {
-                X = value.X;
-                Y = value.Y;
-                Width = value.Width;
-                Height = value.Height;
+                _x = value.X;
+                _y = value.Y;
+                _width = value.Width;
+                _height = value.Height;
 
                 _rectangle = value;
             }
@@ -89,6 +121,11 @@ namespace ProjectManager.Model
             }
         }
 
+        private int _x;
+        private int _y;
+        private int _width;
+        private int _height;
+
         private Rectangle _rectangle;
         private Color _fillColor;
         private Color _borderColor;
@@ -98,8 +135,19 @@ namespace ProjectManager.Model
             Rectangle = rectangle;
         }
 
+        public Zone(Rectangle rectangle, Color fillColor, Color borderColor) : this(rectangle)
+        {
+            this.FillColor = fillColor;
+            this.BorderColor = borderColor;
+        }
+
         public Zone() { }
 
         public abstract Zone Clone();
+
+        private void ForceUpdateRectangle()
+        {
+            Rectangle = new Rectangle(X, Y, Width, Height);
+        }
     }
 }

@@ -13,17 +13,19 @@ namespace ProjectManager.Zones.Implementation
         private static readonly Color Lime = Color.FromArgb(64, 0, 255, 0);
         private static readonly Color DarkGreen = Color.FromArgb(255, 0, 100, 0);
 
-        public TeamZone(string name, Rectangle rectangle) : base(name, rectangle)
+        public TeamZone(string name, Rectangle rectangle, Color fillColor, Color borderColor) : base(name, rectangle)
         {
-            FillColor = Lime;
-            BorderColor = DarkGreen;
+            FillColor = fillColor;
+            BorderColor = borderColor;
         }
+
+        public TeamZone(string name, Rectangle rectangle) : this(name, rectangle, Lime, DarkGreen) { }
 
         private TeamZone() : base("", Rectangle.Empty) { }
 
         public override Zone Clone()
         {
-            return new TeamZone(Name, Rectangle);
+            return new TeamZone(Name, Rectangle, FillColor, BorderColor);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ProjectManager.Drawing;
+using ProjectManager.EditorPanel;
 using ProjectManager.Properties;
 using ProjectManager.Zones;
 using ProjectManager.Zones.Implementation;
@@ -29,19 +30,25 @@ namespace ProjectManager
             FloorplanCanvas.Image = image;
 
             ZoneFacade = new ZoneFacade();
-            CanvasZonePainter = new CanvasZonePainter(FloorplanCanvas, new RectanglePainter());
+            CanvasZonePainter = new CanvasZonePainter(ZoneFacade, FloorplanCanvas, new RectanglePainter());
             CanvasZonePainter.RectangleCreated += this.CanvasZonePainter_RectangleCreated;
-
-            ZoneTypeComboBox.DataSource = Enum.GetValues(typeof(ZoneType));
-            ZoneTypeComboBox.SelectedIndex = 0;
         }
 
         private void CanvasZonePainter_RectangleCreated(object sender, Drawing.Events.RectangleEventArgs e)
         {
-            var selectedZoneType = (ZoneType)ZoneTypeComboBox.SelectedItem;
-            ZoneFacade.CreateNewZone(selectedZoneType, e.Rectangle);
+            SideControlPanel.Controls.Clear();
 
-            CanvasZonePainter.Zones = ZoneFacade.Zones;
+            var selectedZoneType = ZoneType.Desk;//(ZoneType)ZoneTypeComboBox.SelectedItem;
+            var zone = ZoneFacade.CreateNewZone(selectedZoneType, e.Rectangle);
+
+            var editor = new ZoneEditor(zone);
+            editor.Modified += this.Editor_Modified;
+            SideControlPanel.Controls.Add(editor);
+        }
+
+        private void Editor_Modified(object sender, EventArgs e)
+        {
+            CanvasZonePainter.UpdateZones();
         }
     }
 }

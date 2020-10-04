@@ -13,28 +13,33 @@ namespace ProjectManager.Zones
 {
     class ZoneFacade
     {
-        public IEnumerable<Zone> Zones { get => ZoneContainer.Zones; }
+        // TODO: Rename this class...
 
-        private readonly ZoneContainer ZoneContainer;
+        public IList<Zone> Zones { get; }
 
         public ZoneFacade()
         {
-            ZoneContainer = new ZoneContainer();
+            Zones = new List<Zone>();
         }
 
-        public void CreateNewZone(ZoneType type, Rectangle newZoneRectangle)
+        public Zone CreateNewZone(ZoneType type, Rectangle newZoneRectangle)
         {
+            Zone zone;
             switch (type)
             {
                 case ZoneType.Desk:
-                    ZoneContainer.CreateDesk(newZoneRectangle);
+                    zone = new DeskZone(newZoneRectangle);
                     break;
                 case ZoneType.Team:
-                    ZoneContainer.CreateTeam("Team", newZoneRectangle);
+                    zone = new TeamZone("Team", newZoneRectangle);
                     break;
                 default:
-                    break;
+                    throw new InvalidOperationException("Trying to create a zone with invalid ZoneType");
             }
+
+            Zones.Add(zone);
+
+            return zone;
         }
     }
 }
