@@ -13,6 +13,8 @@ namespace ProjectManager.Zones.Implementation
         private static readonly Color Gold = Color.FromArgb(128, 255, 215, 0);
         private static readonly Color DarkOrange = Color.FromArgb(255, 255, 140, 0);
 
+        public override ZoneType Type => ZoneType.Desk;
+
         public DeskZone(Rectangle rectangle, Color fillColor, Color borderColor) : base(rectangle)
         {
             FillColor = fillColor;

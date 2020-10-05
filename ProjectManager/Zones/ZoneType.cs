@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.Zones
 {
-    enum ZoneType
+    public enum ZoneType
     {
         Desk, Team
     }

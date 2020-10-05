@@ -10,7 +10,16 @@ namespace ProjectManager.Zones
 {
     abstract class NamedZone : Zone
     {
-        public string Name { get; private set; }
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
+        private string _name;
 
         protected NamedZone(string name, Rectangle rectangle) : base(rectangle)
         {

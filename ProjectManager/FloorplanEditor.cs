@@ -20,6 +20,9 @@ namespace ProjectManager
     {
         private readonly ZoneFacade ZoneFacade;
         private readonly CanvasZonePainter CanvasZonePainter;
+        private readonly EditorPanelCache EditorPanelCache;
+
+        private ZoneEditor CurrentZoneEditor;
 
         public FloorplanEditor() : this(Resources.Floorplan) { }
 
@@ -29,6 +32,7 @@ namespace ProjectManager
 
             FloorplanCanvas.Image = image;
 
+            EditorPanelCache = new EditorPanelCache();
             ZoneFacade = new ZoneFacade();
             CanvasZonePainter = new CanvasZonePainter(ZoneFacade, FloorplanCanvas, new RectanglePainter());
             CanvasZonePainter.RectangleCreated += this.CanvasZonePainter_RectangleCreated;
@@ -36,14 +40,24 @@ namespace ProjectManager
 
         private void CanvasZonePainter_RectangleCreated(object sender, Drawing.Events.RectangleEventArgs e)
         {
-            SideControlPanel.Controls.Clear();
+            SideControlPanel.Controls.Remove(CurrentZoneEditor);
 
-            var selectedZoneType = ZoneType.Desk;//(ZoneType)ZoneTypeComboBox.SelectedItem;
+            var selectedZoneType = ZoneType.Team;//(ZoneType)ZoneTypeComboBox.SelectedItem;
             var zone = ZoneFacade.CreateNewZone(selectedZoneType, e.Rectangle);
 
-            var editor = new ZoneEditor(zone);
+            var editor = EditorPanelCache.RequestEditor(zone);
+            editor.ZoneTypeChanged += this.Editor_ZoneTypeChanged;
             editor.Modified += this.Editor_Modified;
+
+            CurrentZoneEditor = editor;
+
             SideControlPanel.Controls.Add(editor);
+        }
+
+        private void Editor_ZoneTypeChanged(object sender, ZoneEditor.ZoneTypeEventArgs e)
+        {
+            var type = e.NewType;
+
         }
 
         private void Editor_Modified(object sender, EventArgs e)

@@ -13,6 +13,8 @@ namespace ProjectManager.Zones.Implementation
         private static readonly Color Lime = Color.FromArgb(64, 0, 255, 0);
         private static readonly Color DarkGreen = Color.FromArgb(255, 0, 100, 0);
 
+        public override ZoneType Type => ZoneType.Team;
+
         public TeamZone(string name, Rectangle rectangle, Color fillColor, Color borderColor) : base(name, rectangle)
         {
             FillColor = fillColor;

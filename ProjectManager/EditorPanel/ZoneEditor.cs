@@ -8,20 +8,35 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ProjectManager.Model;
+using ProjectManager.Zones;
 
 namespace ProjectManager.EditorPanel
 {
     public partial class ZoneEditor : UserControl
     {
-        public Zone Zone { get; }
+        public Zone Zone { get; private set; }
 
         public event EventHandler Modified;
+        public event ZoneTypeEventHandler ZoneTypeChanged;
 
-        public ZoneEditor(Zone zone)
+        public ZoneEditor()
         {
             InitializeComponent();
 
+            var zoneTypes = Enum.GetValues(typeof(ZoneType));
+            ZoneTypeComboBox.DataSource = zoneTypes;
+        }
+
+        public virtual void Link(Zone zone)
+        {
             this.Zone = zone;
+
+            XNumericUpDown.DataBindings.Clear();
+            YNumericUpDown.DataBindings.Clear();
+            WidthNumericUpDown.DataBindings.Clear();
+            HeightNumericUpDown.DataBindings.Clear();
+
+            zone.PropertyChanged += OnModified;
 
             XNumericUpDown.DataBindings.Add("Value", zone, "X", false, DataSourceUpdateMode.OnPropertyChanged);
             YNumericUpDown.DataBindings.Add("Value", zone, "Y", false, DataSourceUpdateMode.OnPropertyChanged);
@@ -32,16 +47,16 @@ namespace ProjectManager.EditorPanel
             BorderButton.BackColor = zone.BorderColor;
             FillButton.Text = ColorTranslator.ToHtml(zone.FillColor);
             BorderButton.Text = ColorTranslator.ToHtml(zone.BorderColor);
-
-            XNumericUpDown.ValueChanged += OnModified;
-            YNumericUpDown.ValueChanged += OnModified;
-            WidthNumericUpDown.ValueChanged += OnModified;
-            HeightNumericUpDown.ValueChanged += OnModified;
         }
 
         public void OnModified(object sender, EventArgs e)
         {
             Modified?.Invoke(this, e);
+        }
+
+        public void OnZoneTypeChanged(object sender, ZoneTypeEventArgs e)
+        {
+            ZoneTypeChanged?.Invoke(this, e);
         }
 
         private void FillButton_Click(object sender, EventArgs e)
@@ -89,5 +104,23 @@ namespace ProjectManager.EditorPanel
                 return current;
             }
         }
+
+        private void ZoneTypeComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            var type = (ZoneType)ZoneTypeComboBox.SelectedItem;
+            OnZoneTypeChanged(this, new ZoneTypeEventArgs(type));
+        }
+
+        public class ZoneTypeEventArgs : EventArgs
+        {
+            public ZoneType NewType;
+
+            public ZoneTypeEventArgs(ZoneType newType)
+            {
+                this.NewType = newType;
+            }
+        }
+
+        public delegate void ZoneTypeEventHandler(Object sender, ZoneTypeEventArgs e);
     }
 }

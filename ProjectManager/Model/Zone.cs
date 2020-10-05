@@ -1,15 +1,19 @@
-﻿using System;
+﻿using ProjectManager.Zones;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ProjectManager.Model
 {
-    public abstract class Zone
+    public abstract class Zone : INotifyPropertyChanged
     {
         // TODO: Clean up this object, decouple the DB model
+        public abstract ZoneType Type { get; }
 
         public int Id { get; set; }
         public int X
@@ -19,6 +23,7 @@ namespace ProjectManager.Model
             {
                 _x = value;
                 ForceUpdateRectangle();
+                OnPropertyChanged();
             }
         }
         public int Y
@@ -28,6 +33,7 @@ namespace ProjectManager.Model
             {
                 _y = value;
                 ForceUpdateRectangle();
+                OnPropertyChanged();
             }
         }
         public int Width
@@ -37,6 +43,7 @@ namespace ProjectManager.Model
             {
                 _width = value;
                 ForceUpdateRectangle();
+                OnPropertyChanged();
             }
         }
         public int Height
@@ -46,6 +53,7 @@ namespace ProjectManager.Model
             {
                 _height = value;
                 ForceUpdateRectangle();
+                OnPropertyChanged();
             }
         }
 
@@ -67,6 +75,7 @@ namespace ProjectManager.Model
                 _height = value.Height;
 
                 _rectangle = value;
+                OnPropertyChanged();
             }
         }
 
@@ -98,6 +107,7 @@ namespace ProjectManager.Model
                 FillColorA = value.A;
 
                 _fillColor = value;
+                OnPropertyChanged();
             }
         }
         public Color BorderColor
@@ -118,6 +128,7 @@ namespace ProjectManager.Model
                 BorderColorA = value.A;
 
                 _borderColor = value;
+                OnPropertyChanged();
             }
         }
 
@@ -129,6 +140,13 @@ namespace ProjectManager.Model
         private Rectangle _rectangle;
         private Color _fillColor;
         private Color _borderColor;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
 
         public Zone(Rectangle rectangle)
         {
