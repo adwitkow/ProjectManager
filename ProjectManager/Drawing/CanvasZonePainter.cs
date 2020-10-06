@@ -78,10 +78,39 @@ namespace ProjectManager.Drawing
                 var x = rectangle.X;
                 var y = rectangle.Y;
                 var width = rectangle.Width;
-                var height = rectangle.Height;
+                int height = rectangle.Height;
 
-                var font = GetAdjustedFont(e.Graphics, zone.Name, originalFont, width, height / 2, 6);
-                e.Graphics.DrawString(zone.Name, font, brush, new RectangleF(x, y, width, height), format);
+                int textWidth;
+                int textHeight;
+                bool rotate = false;
+                if (height < width * 1.5f)
+                {
+                    textWidth = width;
+                    textHeight = height;
+                }
+                else
+                {
+                    textWidth = height;
+                    textHeight = width;
+                    rotate = true;
+                }
+
+                var font = GetAdjustedFont(e.Graphics, zone.Name, originalFont, textWidth, textHeight / 2, 6);
+
+                if (rotate)
+                {
+                    //var translateY = y - textHeight;
+                    e.Graphics.TranslateTransform(x, y);
+                    e.Graphics.RotateTransform(90);
+                    e.Graphics.TranslateTransform(-x, -y);
+
+                    e.Graphics.DrawString(zone.Name, font, brush, new RectangleF(x, y - textHeight, textWidth, textHeight), format);
+                    e.Graphics.ResetTransform();
+                }
+                else
+                {
+                    e.Graphics.DrawString(zone.Name, font, brush, new RectangleF(x, y, textWidth, textHeight), format);
+                }
             }
         }
 
