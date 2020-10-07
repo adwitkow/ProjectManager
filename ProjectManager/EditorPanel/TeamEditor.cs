@@ -26,7 +26,10 @@ namespace ProjectManager.EditorPanel
             }
 
             TeamNameTextBox.DataBindings.Clear();
+            LabelScaleUpDown.DataBindings.Clear();
+
             TeamNameTextBox.DataBindings.Add("Text", zone, "Name", false, DataSourceUpdateMode.OnPropertyChanged);
+            LabelScaleUpDown.DataBindings.Add("Value", zone, "Scale", false, DataSourceUpdateMode.OnPropertyChanged);
 
             base.Link(zone);
         }

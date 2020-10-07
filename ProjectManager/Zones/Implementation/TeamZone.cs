@@ -15,19 +15,19 @@ namespace ProjectManager.Zones.Implementation
 
         public override ZoneType Type => ZoneType.Team;
 
-        public TeamZone(string name, Rectangle rectangle, Color fillColor, Color borderColor) : base(name, rectangle)
+        public TeamZone(string name, float scale, Rectangle rectangle, Color fillColor, Color borderColor) : base(name, scale, rectangle)
         {
             FillColor = fillColor;
             BorderColor = borderColor;
         }
 
-        public TeamZone(string name, Rectangle rectangle) : this(name, rectangle, Lime, DarkGreen) { }
+        public TeamZone(string name, Rectangle rectangle) : this(name, 1f, rectangle, Lime, DarkGreen) { }
 
-        private TeamZone() : base("", Rectangle.Empty) { }
+        private TeamZone() : base("", 1f, Rectangle.Empty) { }
 
         public override Zone Clone()
         {
-            return new TeamZone(Name, Rectangle, FillColor, BorderColor);
+            return new TeamZone(Name, Scale, Rectangle, FillColor, BorderColor);
         }
     }
 }

@@ -95,7 +95,7 @@ namespace ProjectManager.Drawing
                     rotate = true;
                 }
 
-                var font = GetAdjustedFont(e.Graphics, zone.Name, originalFont, textWidth, textHeight, 6);
+                var font = GetAdjustedFont(e.Graphics, zone.Name, originalFont, textWidth, textHeight, 6, zone.Scale);
 
                 if (rotate)
                 {
@@ -206,7 +206,7 @@ namespace ProjectManager.Drawing
                 Math.Abs(y1 - y2));
         }
 
-        private Font GetAdjustedFont(Graphics g, string graphicString, Font originalFont, int containerWidth, int containerHeight, int minFontSize)
+        private Font GetAdjustedFont(Graphics g, string graphicString, Font originalFont, int containerWidth, int containerHeight, int minFontSize, float scale)
         {
             Font testFont = originalFont;
             // We utilize MeasureString which we get via a control instance           
@@ -221,11 +221,11 @@ namespace ProjectManager.Drawing
                     && containerHeight > Convert.ToInt32(adjustedSizeNew.Height))
                 {
                     // Good font, return it
-                    return testFont;
+                    return new Font(originalFont.Name, testFont.Size * scale, originalFont.Style);
                 }
             }
 
-            return testFont;
+            return new Font(originalFont.Name, testFont.Size * scale, originalFont.Style);
         }
 
         private IEnumerable<Zone> ResizeZones()
