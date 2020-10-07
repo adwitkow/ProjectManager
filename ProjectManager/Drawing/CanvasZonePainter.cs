@@ -209,7 +209,7 @@ namespace ProjectManager.Drawing
         private Font GetAdjustedFont(Graphics g, string graphicString, Font originalFont, int containerWidth, int containerHeight, int minFontSize, float scale)
         {
             Font testFont = originalFont;
-            // We utilize MeasureString which we get via a control instance           
+            // We utilize MeasureString which we get via a control instance
             var maxFontSize = containerHeight / 2;
             for (int adjustedSize = maxFontSize; adjustedSize >= minFontSize; adjustedSize--)
             {
