@@ -95,7 +95,7 @@ namespace ProjectManager.Drawing
                     rotate = true;
                 }
 
-                var font = GetAdjustedFont(e.Graphics, zone.Name, originalFont, textWidth, textHeight / 2, 6);
+                var font = GetAdjustedFont(e.Graphics, zone.Name, originalFont, textWidth, textHeight, 6);
 
                 if (rotate)
                 {
@@ -206,18 +206,19 @@ namespace ProjectManager.Drawing
                 Math.Abs(y1 - y2));
         }
 
-        private Font GetAdjustedFont(Graphics g, string graphicString, Font originalFont, int containerWidth, int maxFontSize, int minFontSize)
+        private Font GetAdjustedFont(Graphics g, string graphicString, Font originalFont, int containerWidth, int containerHeight, int minFontSize)
         {
             Font testFont = originalFont;
             // We utilize MeasureString which we get via a control instance           
+            var maxFontSize = containerHeight / 2;
             for (int adjustedSize = maxFontSize; adjustedSize >= minFontSize; adjustedSize--)
             {
                 testFont = new Font(originalFont.Name, adjustedSize, originalFont.Style);
 
                 // Test the string with the new size
-                SizeF adjustedSizeNew = g.MeasureString(graphicString, testFont);
-
-                if (containerWidth > Convert.ToInt32(adjustedSizeNew.Width))
+                SizeF adjustedSizeNew = g.MeasureString(graphicString, testFont, new SizeF(containerWidth, containerHeight * 2));
+                if (containerWidth > Convert.ToInt32(adjustedSizeNew.Width)
+                    && containerHeight > Convert.ToInt32(adjustedSizeNew.Height))
                 {
                     // Good font, return it
                     return testFont;
